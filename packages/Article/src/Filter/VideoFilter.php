@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Article\Filter;
 
 use Zend\InputFilter\InputFilter;
@@ -12,58 +14,68 @@ class VideoFilter implements InputFilterAwareInterface
 
     public function getInputFilter()
     {
-        if(!$this->inputFilter) {
+        if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add([
-                'name'       => 'title',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'title',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'sub_title',
-                'required'   => false,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 500]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'sub_title',
+                    'required'   => false,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 500]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'body',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'body',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'lead',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'lead',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'video_url',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength'],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'video_url',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength'],
+                    ],
+                ]
+            );
 
             $this->inputFilter = $inputFilter;
         }
@@ -73,6 +85,6 @@ class VideoFilter implements InputFilterAwareInterface
 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
-        throw new \Exception("Not used");
+        throw new \Exception('Not used');
     }
 }

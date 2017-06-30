@@ -1,18 +1,19 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Article\Controller;
 
-use Core\Controller\AbstractController;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
-use Zend\Diactoros\Response\HtmlResponse;
+use Article\Entity\ArticleType;
 use Article\Service\PostService;
 use Category\Service\CategoryService;
-use Zend\Session\SessionManager;
+use Std\AbstractController;
+use Std\FilterException;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface as Router;
-use Core\Exception\FilterException;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Session\SessionManager;
 
 class PostController extends AbstractController
 {
@@ -22,7 +23,7 @@ class PostController extends AbstractController
     private $template;
 
     /**
-     * @var \Core\Service\PostService
+     * @var PostService
      */
     private $postService;
 
@@ -44,10 +45,10 @@ class PostController extends AbstractController
     /**
      * PostController constructor.
      *
-     * @param Template $template
-     * @param Router $router
-     * @param PostService $postService
-     * @param SessionManager $session
+     * @param Template        $template
+     * @param Router          $router
+     * @param PostService     $postService
+     * @param SessionManager  $session
      * @param CategoryService $categoryService
      */
     public function __construct(
@@ -56,75 +57,79 @@ class PostController extends AbstractController
         PostService $postService,
         SessionManager $session,
         CategoryService $categoryService
-    )
-    {
-        $this->template        = $template;
-        $this->postService     = $postService;
-        $this->session         = $session;
-        $this->router          = $router;
+    ) {
+        $this->template = $template;
+        $this->postService = $postService;
+        $this->session = $session;
+        $this->router = $router;
         $this->categoryService = $categoryService;
     }
 
-    public function index() : HtmlResponse
+    public function index(): HtmlResponse
     {
         $params = $this->request->getQueryParams();
-        $page   = isset($params['page']) ? $params['page'] : 1;
-        $limit  = isset($params['limit']) ? $params['limit'] : 15;
-        $posts  = $this->postService->fetchAllArticles($page, $limit);
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 15;
+        $posts = $this->postService->fetchAllArticles($page, $limit);
 
-        return new HtmlResponse($this->template->render('article::post/index', ['list' => $posts, 'layout' => 'layout/admin']));
+        return new HtmlResponse($this->template->render(
+            'article::post/index',
+            ['list' => $posts, 'layout' => 'layout/admin'])
+        );
     }
 
     /**
-     * Add/Edit show form
+     * Add/Edit show form.
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function edit($errors = []) : \Psr\Http\Message\ResponseInterface
+    public function edit($errors = []): \Psr\Http\Message\ResponseInterface
     {
-        $id         = $this->request->getAttribute('id');
-        $post       = $this->postService->fetchSingleArticle($id);
-        $categories = $this->categoryService->getAll();
+        $id = $this->request->getAttribute('id');
+        $post = $this->postService->fetchSingleArticle($id);
+        $categories = $this->categoryService->getAll(ArticleType::POST);
 
-        if($this->request->getParsedBody()){
-            $post             = (object)($this->request->getParsedBody() + (array)$post);
+        if ($this->request->getParsedBody()) {
+            $post = (object) ($this->request->getParsedBody() + (array) $post);
             $post->article_id = $id;
         }
 
-        return new HtmlResponse($this->template->render('article::post/edit', [
-            'post'       => $post,
-            'categories' => $categories,
-            'errors'     => $errors,
-            'layout'     => 'layout/admin'
-        ]));
+        return new HtmlResponse(
+            $this->template->render(
+                'article::post/edit', [
+                    'post'       => $post,
+                    'categories' => $categories,
+                    'errors'     => $errors,
+                    'layout'     => 'layout/admin',
+                ]
+            )
+        );
     }
 
     /**
-     * Add/Edit article action
+     * Add/Edit article action.
      *
      * @throws FilterException if filter fails
      * @throws \Exception
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function save() : \Psr\Http\Message\ResponseInterface
+    public function save(): \Psr\Http\Message\ResponseInterface
     {
-        try{
-            $id   = $this->request->getAttribute('id');
+        try {
+            $id = $this->request->getAttribute('id');
             $user = $this->session->getStorage()->user;
             $data = $this->request->getParsedBody();
             $data += (new Request())->getFiles()->toArray();
 
-            if($id){
+            if ($id) {
                 $this->postService->updateArticle($data, $id);
-            }
-            else{
+            } else {
                 $this->postService->createArticle($user, $data);
             }
-        }
-        catch(FilterException $fe){
+        } catch (FilterException $fe) {
             return $this->edit($fe->getArrayMessages());
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
 
@@ -134,15 +139,15 @@ class PostController extends AbstractController
     /**
      * Delete post by id.
      *
-     * @return \Psr\Http\Message\ResponseInterface
      * @throws \Exception
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function delete() : \Psr\Http\Message\ResponseInterface
+    public function delete(): \Psr\Http\Message\ResponseInterface
     {
-        try{
+        try {
             $this->postService->deleteArticle($this->request->getAttribute('id'));
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
 

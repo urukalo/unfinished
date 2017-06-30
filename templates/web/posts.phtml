@@ -1,0 +1,92 @@
+<?php
+$escaper = (new \Zend\Escaper\Escaper);
+$this->headTitle($escaper->escapeHtml($currentCategory->title));
+$this->headMeta($escaper->escapeHtml($currentCategory->description), 'description');
+$this->headMeta('post', 'og:type');
+$this->headMeta($currentCategory->main_img ? $this->serverUrl($currentCategory->main_img) : '', 'og:image');
+$this->headMeta($this->serverUrl(), 'og:url');
+$this->headMeta($currentCategory->description, 'og:description');
+?>
+<div class="blog-page">
+    <!-- Categories -->
+    <div class="headline"><?= $currentCategory->name; ?></div>
+    <ul class="blog-tags-wrapper">
+        <li><a class="link tag <?= $currentCategory->slug == 'all' ? 'active' : '' ?>"
+               href="<?= $this->url('category', ['category' => 'all']) ?>">Svi članci</a></li>
+        <?php foreach($this->categories as $category): ?>
+            <li><a class="link tag <?= $category->slug == $currentCategory->slug ? 'active' : '' ?>"
+                   href="<?= $this->url('category', ['category' => $category->slug]) ?>">
+                    <?= $category->name ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    <!-- \Categories -->
+
+    <!-- Left side - list of latest blog posts  -->
+    <div class="blog-wrapper">
+        <div class="blog-posts">
+            <div class="clearfix">
+                <?php foreach($posts as $post): ?>
+                    <a href="<?= $this->url('post', ['segment_1' => $post->category_slug, 'segment_2' => $post->slug]) ?>"
+                       class="link blog">
+                        <div class="image-wrapper-none image-transition">
+                            <img src="<?= $post->main_img ?>">
+
+                            <div class="blog-box-hover"></div>
+                        </div>
+                        <div class="blog-box-content">
+                            <div class="title"><?= $post->title ?></div>
+                            <time class="datetime">
+                                <?= date('M d, Y', strtotime($post['published_at'])) ?> /
+                                <?= $post->first_name . ' ' . mb_substr($post->last_name, 0, 1); ?>.
+                            </time>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <!-- \Left side - list of latest blog posts  -->
+
+        <div class="blog-sidebar">
+            <h4>Ne propustite</h4>
+            <!-- Two last events -->
+            <?php foreach($this->event()->getLatest(2) as $event): ?>
+                <article class="blog-post-sidebar">
+                    <div class="image-wrapper-none">
+                        <img src="<?= $event->main_img ?>">
+
+                        <div class="blog-box-hover"></div>
+                    </div>
+                    <div class="blog-box-sidebar-content">
+                        <a href="<?= $this->url('category', ['category' => $event->category_slug]) ?>" class="category">Dešavanja</a>
+                        <a href="<?= $this->url('post', ['segment_1' => $event->category_slug, 'segment_2' => $event->slug]) ?>" class="title">
+                            <span><?= $event->title ?></span></a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            <!-- \Two last events -->
+
+            <!-- Latest blog posts -->
+            <?php foreach($this->post()->forWeb() as $post): ?>
+                <article class="blog-post-sidebar">
+                    <div class="image-wrapper-none">
+                        <img src="<?= $post->main_img ?>">
+
+                        <div class="blog-box-hover"></div>
+                    </div>
+                    <div class="blog-box-sidebar-content">
+                        <a href="<?= $this->url('category', ['category' => $post->category_slug]) ?>"
+                           class="category"><?= $post->category_name ?></a>
+                        <a href="<?= $this->url('post', ['segment_1' => $post->category_slug, 'segment_2' => $post->slug]) ?>"
+                           class="title"><span><?= $post->title ?></span></a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            <!-- \Latest blog posts -->
+        </div>
+    </div>
+</div>
+
+<div class="half-pagination">
+    <?= $this->paginationControl($posts, 'Sliding', 'article/pagination',
+        ['route' => 'category', 'data' => ['category' => $currentCategory->slug]]) ?>
+</div>

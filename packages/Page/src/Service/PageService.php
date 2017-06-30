@@ -1,45 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Page\Service;
 
-use Core\Exception\FilterException;
-use Page\Mapper\PageMapper;
-use Page\Filter\PageFilter;
-use UploadHelper\Upload;
-use Ramsey\Uuid\Uuid;
-use MysqlUuid\Uuid as MysqlUuid;
 use MysqlUuid\Formats\Binary;
-use Zend\Paginator\Adapter\DbSelect;
+use MysqlUuid\Uuid as MysqlUuid;
+use Page\Filter\PageFilter;
+use Page\Mapper\PageMapper;
+use Ramsey\Uuid\Uuid;
+use Std\FilterException;
+use UploadHelper\Upload;
 use Zend\Paginator\Paginator;
 
 class PageService
 {
-    private $pageMapper;
     private $pageFilter;
+    private $pageMapper;
+    private $pagination;
     private $upload;
 
-    public function __construct(
-        PageMapper $pageMapper,
-        PageFilter $pageFilter,
-        Upload $upload
-    ) {
-        $this->pageMapper = $pageMapper;
+    public function __construct(PageFilter $pageFilter, PageMapper $pageMapper, Paginator $pagination, Upload $upload)
+    {
         $this->pageFilter = $pageFilter;
-        $this->upload     = $upload;
+        $this->pageMapper = $pageMapper;
+        $this->pagination = $pagination;
+        $this->upload = $upload;
     }
 
     public function getPagination($page = 1, $limit = 10)
     {
-        $select            = $this->pageMapper->getPaginationSelect();
-        $paginationAdapter = new DbSelect($select,
-            $this->pageMapper->getAdapter(),
-            $this->pageMapper->getResultSetPrototype());
-        $pagination        = new Paginator($paginationAdapter);
+        $this->pagination->setCurrentPageNumber($page);
+        $this->pagination->setItemCountPerPage($limit);
 
-        $pagination->setCurrentPageNumber($page);
-        $pagination->setItemCountPerPage($limit);
-
-        return $pagination;
+        return $this->pagination;
     }
 
     /**
@@ -73,8 +67,9 @@ class PageService
     /**
      * @param array $data
      *
-     * @return int
      * @throws FilterException
+     *
+     * @return int
      */
     public function createPage($data)
     {
@@ -84,11 +79,11 @@ class PageService
             throw new FilterException($filter->getMessages());
         }
 
-        $data            = $filter->getValues()
+        $data = $filter->getValues()
             + ['main_img' => $this->upload->uploadImage($data, 'main_img')];
         $data['page_id'] = Uuid::uuid1()->toString();
         $data['page_uuid']
-                         = (new MysqlUuid($data['page_id']))->toFormat(new Binary);
+            = (new MysqlUuid($data['page_id']))->toFormat(new Binary());
 
         if ($data['is_homepage']) {
             $this->pageMapper->update(['is_homepage' => false]);
@@ -100,7 +95,7 @@ class PageService
     public function updatePage($data, $pageId)
     {
         if (!($page = $this->getPage($pageId))) {
-            throw new \Exception('Page object not found. Page ID:' . $pageId);
+            throw new \Exception('Page object not found. Page ID:'.$pageId);
         }
 
         $filter = $this->pageFilter->getInputFilter()->setData($data);
@@ -115,8 +110,7 @@ class PageService
         // We don't want to force user to re-upload image on edit
         if (!$data['main_img']) {
             unset($data['main_img']);
-        }
-        else {
+        } else {
             $this->upload->deleteFile($page->getMainImg());
         }
 
@@ -135,6 +129,11 @@ class PageService
 
         $this->upload->deleteFile($page->getMainImg());
 
-        return (bool)$this->pageMapper->delete(['page_id' => $pageId]);
+        return (bool) $this->pageMapper->delete(['page_id' => $pageId]);
+    }
+
+    public function getForSelect()
+    {
+        return $this->pageMapper->select();
     }
 }

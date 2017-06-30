@@ -4,50 +4,42 @@ declare(strict_types=1);
 
 namespace Article\Controller;
 
-use Core\Controller\AbstractController;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
-use Zend\Diactoros\Response\HtmlResponse;
+use Article\Entity\ArticleType;
 use Article\Service\VideoService;
 use Category\Service\CategoryService;
-use Zend\Session\SessionManager;
+use Std\AbstractController;
+use Std\FilterException;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface as Router;
-use Core\Exception\FilterException;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Session\SessionManager;
 
 class VideoController extends AbstractController
 {
-    /**
-     * @var Template
+    /** @var Template
      */
     private $template;
 
-    /**
-     * @var \Core\Service\VideoService
-     */
+    /** @var VideoService */
     private $videoService;
 
-    /**
-     * @var SessionManager
-     */
+    /** @var SessionManager */
     private $session;
 
-    /**
-     * @var Router
-     */
+    /** @var Router */
     private $router;
 
-    /**
-     * @var CategoryService
-     */
+    /** @var CategoryService */
     private $categoryService;
 
     /**
      * VideoController constructor.
      *
-     * @param Template $template
-     * @param Router $router
-     * @param VideoService $videoService
-     * @param SessionManager $session
+     * @param Template        $template
+     * @param Router          $router
+     * @param VideoService    $videoService
+     * @param SessionManager  $session
      * @param CategoryService $categoryService
      */
     public function __construct(
@@ -56,97 +48,102 @@ class VideoController extends AbstractController
         VideoService $videoService,
         SessionManager $session,
         CategoryService $categoryService
-    )
-    {
-        $this->template        = $template;
-        $this->videoService    = $videoService;
-        $this->session         = $session;
-        $this->router          = $router;
+    ) {
+        $this->template = $template;
+        $this->videoService = $videoService;
+        $this->session = $session;
+        $this->router = $router;
         $this->categoryService = $categoryService;
     }
 
     public function index(): HtmlResponse
     {
         $params = $this->request->getQueryParams();
-        $page   = isset($params['page']) ? $params['page'] : 1;
-        $limit  = isset($params['limit']) ? $params['limit'] : 15;
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 15;
         $videos = $this->videoService->fetchAllArticles($page, $limit);
 
-        return new HtmlResponse($this->template->render('article::video/index', ['list' => $videos, 'layout' => 'layout/admin']));
+        return new HtmlResponse($this->template->render('article::video/index',
+            ['list' => $videos, 'layout' => 'layout/admin'])
+        );
     }
 
     /**
-     * Add/Edit show form
+     * Add/Edit show form.
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function edit($errors = []): \Psr\Http\Message\ResponseInterface
     {
-        $id         = $this->request->getAttribute('id');
-        $video      = $this->videoService->fetchSingleArticle($id);
-        $categories = $this->categoryService->getAll();
+        $id = $this->request->getAttribute('id');
+        $video = $this->videoService->fetchSingleArticle($id);
+        $categories = $this->categoryService->getAll(ArticleType::VIDEO);
 
-        if($this->request->getParsedBody()) {
-            $video             = (object)($this->request->getParsedBody() + (array)$video);
+        if ($this->request->getParsedBody()) {
+            $video = (object) ($this->request->getParsedBody() + (array) $video);
             $video->article_id = $id;
         }
 
-        return new HtmlResponse($this->template->render('article::video/edit', [
-            'video'      => $video,
-            'categories' => $categories,
-            'errors'     => $errors,
-            'layout'     => 'layout/admin'
-        ]));
+        return new HtmlResponse(
+            $this->template->render(
+                'article::video/edit', [
+                    'video'      => $video,
+                    'categories' => $categories,
+                    'errors'     => $errors,
+                    'layout'     => 'layout/admin',
+                ]
+            )
+        );
     }
 
     /**
-     * Add/Edit article action
+     * Add/Edit article action.
      *
      * @throws FilterException if filter fails
      * @throws \Exception
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function save(): \Psr\Http\Message\ResponseInterface
     {
         try {
-            $id   = $this->request->getAttribute('id');
+            $id = $this->request->getAttribute('id');
             $user = $this->session->getStorage()->user;
             $data = $this->request->getParsedBody();
             $data += (new Request())->getFiles()->toArray();
 
-            if($id) {
+            if ($id) {
                 $this->videoService->updateArticle($data, $id);
             } else {
                 $this->videoService->createArticle($user, $data);
             }
-        }
-        catch(FilterException $fe) {
+        } catch (FilterException $fe) {
             return $this->edit($fe->getArrayMessages());
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
-        return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin.videos'));
+        return $this->response->withStatus(302)->withHeader('Location',
+            $this->router->generateUri('admin.videos'));
     }
 
     /**
      * Delete video by id.
      *
-     * @return \Psr\Http\Message\ResponseInterface
      * @throws \Exception
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete(): \Psr\Http\Message\ResponseInterface
     {
         try {
             $this->videoService->deleteArticle($this->request->getAttribute('id'));
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
-        return $this->response->withStatus(302)->withHeader(
-            'Location', $this->router->generateUri('admin.videos', ['action' => 'index'])
+        return $this->response->withStatus(302)->withHeader('Location',
+            $this->router->generateUri('admin.videos', ['action' => 'index'])
         );
     }
 }

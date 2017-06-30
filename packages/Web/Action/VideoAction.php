@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Web\Action;
 
+use Article\Entity\ArticleType;
 use Article\Service\VideoService;
 use Category\Service\CategoryService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 
 /**
  * Class VideoAction.
- *
- * @package Web\Action
  */
 class VideoAction
 {
@@ -30,39 +29,47 @@ class VideoAction
     /**
      * VideoAction constructor.
      *
-     * @param Template $template
-     * @param VideoService $videoService
+     * @param Template        $template
+     * @param VideoService    $videoService
      * @param CategoryService $categoryService
      */
-    public function __construct(Template $template, VideoService $videoService, CategoryService $categoryService)
-    {
-        $this->template        = $template;
-        $this->videoService    = $videoService;
+    public function __construct(
+        Template $template,
+        VideoService $videoService,
+        CategoryService $categoryService
+    ) {
+        $this->template = $template;
+        $this->videoService = $videoService;
         $this->categoryService = $categoryService;
     }
 
     /**
-     * Executed when action is invoked
+     * Executed when action is invoked.
      *
-     * @param Request $request
-     * @param Response $response
+     * @param Request       $request
+     * @param Response      $response
      * @param callable|null $next
-     * @return HtmlResponse
+     *
      * @throws \Exception
+     *
+     * @return HtmlResponse
      */
-    public function __invoke(Request $request, Response $response, callable $next = null)
-    {
-        $videoSlug = $request->getAttribute('video_slug');
-        $video     = $this->videoService->fetchVideoBySlug($videoSlug);
+    public function __invoke(
+        Request $request,
+        Response $response,
+        callable $next = null
+    ) {
+        $categorySlug = $request->getAttribute('segment_1');
+        $videoSlug = $request->getAttribute('segment_2');
+        $video = $this->videoService->fetchVideoBySlug($videoSlug);
 
-        if(!$video) {
+        if (!$video || $video->type != ArticleType::VIDEO) {
             return $next($request, $response);
         }
 
         return new HtmlResponse($this->template->render('web::video', [
             'layout' => 'layout/web',
-            'video'  => $video
+            'video'  => $video,
         ]));
     }
-
 }

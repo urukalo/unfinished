@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\View\Helper;
 
-use Core\Service\AdminUserService;
-use Zend\View\Helper\AbstractHelper;
+use Admin\Service\AdminUserService;
 use Zend\Session\SessionManager;
+use Zend\View\Helper\AbstractHelper;
 
 class AdminUserHelper extends AbstractHelper
 {
@@ -13,7 +15,7 @@ class AdminUserHelper extends AbstractHelper
 
     public function __construct(SessionManager $session, AdminUserService $adminUserService)
     {
-        $this->session          = $session;
+        $this->session = $session;
         $this->adminUserService = $adminUserService;
     }
 
@@ -31,5 +33,4 @@ class AdminUserHelper extends AbstractHelper
     {
         return $this->adminUserService->getAll();
     }
-
 }

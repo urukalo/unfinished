@@ -11,7 +11,7 @@ class ConfigProvider
         return [
             'templates' => [
                 'paths' => [
-                    'article' => [__DIR__ . '/../templates/article'],
+                    'article' => [__DIR__.'/../templates/article'],
                 ],
             ],
 
@@ -30,11 +30,11 @@ class ConfigProvider
                     Service\VideoService::class            => Factory\Service\VideoServiceFactory::class,
 
                     // Mappers
-                    Mapper\ArticleMapper::class            => \Core\Factory\MapperFactory::class,
-                    Mapper\ArticlePostsMapper::class       => \Core\Factory\MapperFactory::class,
-                    Mapper\ArticleDiscussionsMapper::class => \Core\Factory\MapperFactory::class,
-                    Mapper\ArticleEventsMapper::class      => \Core\Factory\MapperFactory::class,
-                    Mapper\ArticleVideosMapper::class      => \Core\Factory\MapperFactory::class,
+                    Mapper\ArticleMapper::class            => \Std\MapperFactory::class,
+                    Mapper\ArticlePostsMapper::class       => \Std\MapperFactory::class,
+                    Mapper\ArticleDiscussionsMapper::class => \Std\MapperFactory::class,
+                    Mapper\ArticleEventsMapper::class      => \Std\MapperFactory::class,
+                    Mapper\ArticleVideosMapper::class      => \Std\MapperFactory::class,
 
                     // Filters
                     Filter\ArticleFilter::class            => InvokableFactory::class,
@@ -62,38 +62,38 @@ class ConfigProvider
                     'name'            => 'admin.discussions',
                     'path'            => '/admin/discussions',
                     'middleware'      => Controller\DiscussionController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 [
                     'name'            => 'admin.discussions.action',
                     'path'            => '/admin/discussions/:action/:id',
                     'middleware'      => Controller\DiscussionController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 [
                     'name'            => 'admin.events',
                     'path'            => '/admin/events',
                     'middleware'      => Controller\EventController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 [
                     'name'            => 'admin.events.action',
                     'path'            => '/admin/events/:action/:id',
                     'middleware'      => Controller\EventController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 [
                     'name'            => 'admin.videos',
                     'path'            => '/admin/videos',
                     'middleware'      => Controller\VideoController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
                 [
                     'name'            => 'admin.videos.action',
                     'path'            => '/admin/videos/:action/:id',
                     'middleware'      => Controller\VideoController::class,
-                    'allowed_methods' => ['GET', 'POST']
-                ]
+                    'allowed_methods' => ['GET', 'POST'],
+                ],
             ],
 
             'view_helpers' => [

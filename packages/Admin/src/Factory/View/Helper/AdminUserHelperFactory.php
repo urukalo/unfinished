@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Factory\View\Helper;
 
+use Admin\Service\AdminUserService;
 use Admin\View\Helper\AdminUserHelper;
-use Core\Service\AdminUserService;
 use Interop\Container\ContainerInterface;
 
 class AdminUserHelperFactory
@@ -15,5 +17,4 @@ class AdminUserHelperFactory
             $container->get(AdminUserService::class)
         );
     }
-
 }

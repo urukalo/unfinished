@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Admin\Test\View\Helper;
 
 class AdminUserHelperTest extends \PHPUnit_Framework_TestCase
@@ -7,7 +9,7 @@ class AdminUserHelperTest extends \PHPUnit_Framework_TestCase
     public function testInvokingAdminUserHelperShouldReturnItSelf()
     {
         $session = new \Zend\Session\SessionManager();
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
         $adminUserHelper = new \Admin\View\Helper\AdminUserHelper($session, $adminUserService);
@@ -16,12 +18,14 @@ class AdminUserHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testCurrentShouldReturnUserFromSession()
     {
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $session = new \Zend\Session\SessionManager();
         $session->setStorage($sessionStorage);
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
         $adminUserHelper = new \Admin\View\Helper\AdminUserHelper($session, $adminUserService);
@@ -31,7 +35,7 @@ class AdminUserHelperTest extends \PHPUnit_Framework_TestCase
     public function testAllShouldReturnArray()
     {
         $session = new \Zend\Session\SessionManager();
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->setMethods(['getAll'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();

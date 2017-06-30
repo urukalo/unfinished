@@ -6,7 +6,7 @@ return [
     'dependencies'        => [
         'factories' => [
             Helper\ServerUrlMiddleware::class => Helper\ServerUrlMiddlewareFactory::class,
-            Helper\UrlHelperMiddleware::class => Helper\UrlHelperMiddlewareFactory::class
+            Helper\UrlHelperMiddleware::class => Helper\UrlHelperMiddlewareFactory::class,
         ],
     ],
     // This can be used to seed pre- and/or post-routing middleware
@@ -16,12 +16,12 @@ return [
                 // Execute on every request: bootstrapping, pre-conditions, modifications to outgoing responses etc.
                 \Zend\Stratigility\Middleware\OriginalMessages::class,
                 \Zend\Stratigility\Middleware\ErrorHandler::class,
-                \Zend\Expressive\Helper\ServerUrlMiddleware::class
+                \Zend\Expressive\Helper\ServerUrlMiddleware::class,
             ],
             'priority'   => 10000,
         ],
 
-        'routing' => [
+        'routing'  => [
             'middleware' => [
                 Zend\Expressive\Container\ApplicationFactory::ROUTING_MIDDLEWARE,
 
@@ -40,6 +40,12 @@ return [
         //    'middleware' => [\Core\Middleware\Error::class],
         //    'error'      => true,
         //    'priority'   => 1000000,
+        //],
+        //'error404' => [
+        //    'middleware' => [
+        //        \Zend\Expressive\Middleware\NotFoundHandler::class
+        //    ],
+        //    'priority'   => -10,
         //],
     ],
 ];

@@ -1,20 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Admin\Controller;
 
-use Core\Controller\AbstractController;
-use Core\Service\AdminUserService;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
-use Zend\Expressive\Router\RouterInterface as Router;
+use Admin\Service\AdminUserService;
+use Std\AbstractController;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface as Router;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Session\SessionManager;
 
 /**
  * Class AuthController.
  * Deals with handlers which work with admin user authentication.
- *
- * @package Admin\Controller
  */
 final class AuthController extends AbstractController
 {
@@ -41,16 +40,20 @@ final class AuthController extends AbstractController
     /**
      * AuthController constructor.
      *
-     * @param Router $router                     router
-     * @param Template $template                 template engine
-     * @param SessionManager $session            session manager
+     * @param Router           $router           router
+     * @param Template         $template         template engine
+     * @param SessionManager   $session          session manager
      * @param AdminUserService $adminUserService admin user service
      */
-    public function __construct(Router $router, Template $template, SessionManager $session, AdminUserService $adminUserService)
-    {
-        $this->router           = $router;
-        $this->template         = $template;
-        $this->session          = $session;
+    public function __construct(
+        Router $router,
+        Template $template,
+        SessionManager $session,
+        AdminUserService $adminUserService
+    ) {
+        $this->router = $router;
+        $this->template = $template;
+        $this->session = $session;
         $this->adminUserService = $adminUserService;
     }
 
@@ -61,7 +64,7 @@ final class AuthController extends AbstractController
      */
     public function login($error = false): \Psr\Http\Message\ResponseInterface
     {
-        if($this->session->getStorage()->user) {
+        if ($this->session->getStorage()->user) {
             return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin'));
         }
 
@@ -75,20 +78,19 @@ final class AuthController extends AbstractController
      */
     public function loginHandle(): \Psr\Http\Message\ResponseInterface
     {
-        if($this->session->getStorage()->user) {
+        if ($this->session->getStorage()->user) {
             return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin'));
         }
 
-        $data     = $this->request->getParsedBody();
-        $email    = isset($data['email']) ? $data['email'] : null;
+        $data = $this->request->getParsedBody();
+        $email = isset($data['email']) ? $data['email'] : null;
         $password = isset($data['password']) ? $data['password'] : null;
 
         try {
             $this->session->getStorage()->user = $this->adminUserService->loginUser($email, $password);
 
             return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin'));
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->login($e->getMessage());
 
             //@todo set $e->getMessage() to flash messanger and print messages in next page
@@ -97,9 +99,7 @@ final class AuthController extends AbstractController
     }
 
     /**
-     * Clears user session.
-     *
-     * @return static
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function logout(): \Psr\Http\Message\ResponseInterface
     {

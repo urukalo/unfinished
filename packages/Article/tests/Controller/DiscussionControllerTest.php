@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Test\Article\Controller;
 
 class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
@@ -115,9 +117,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -144,7 +148,9 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+        /**
+         * @var \Zend\Diactoros\Response
+         */
         $returnedResponse = $discussionController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -153,9 +159,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -183,7 +191,6 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
         $returnedResponse = $discussionController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -192,9 +199,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -207,7 +216,7 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $discussionService->expects(static::once())
             ->method('updateArticle')
-            ->willThrowException(new \Core\Exception\FilterException(['test error']));
+            ->willThrowException(new \Std\FilterException(['test error']));
         $categoryService = $this->getMockBuilder(\Category\Service\CategoryService::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -225,7 +234,7 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+
         $returnedResponse = $discussionController($request, $response);
         static::assertSame(200, $returnedResponse->getStatusCode());
         static::assertInstanceOf(\Zend\Diactoros\Response\HtmlResponse::class, $returnedResponse);
@@ -239,9 +248,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -276,9 +287,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -305,7 +318,6 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
         $returnedResponse = $discussionController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -318,9 +330,11 @@ class DiscussionControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)

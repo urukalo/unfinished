@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Page\Controller;
 
 use Interop\Container\ContainerInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Page\Service\PageService;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 class PageControllerFactory
 {
@@ -17,5 +19,4 @@ class PageControllerFactory
             $container->get(PageService::class)
         );
     }
-
 }

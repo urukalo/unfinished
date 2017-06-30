@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Article\Controller;
 
-use Core\Controller\AbstractController;
+use Article\Entity\ArticleType;
 use Article\Service\EventService;
-use Core\Exception\FilterException;
 use Category\Service\CategoryService;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
-use Zend\Expressive\Router\RouterInterface as Router;
+use Std\AbstractController;
+use Std\FilterException;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Session\SessionManager;
+use Zend\Expressive\Router\RouterInterface as Router;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Session\SessionManager;
 
 class EventController extends AbstractController
 {
@@ -22,62 +23,81 @@ class EventController extends AbstractController
     private $session;
     private $categoryService;
 
-    public function __construct(Template $template, Router $router, EventService $eventService, SessionManager $session, CategoryService $categoryService)
-    {
-        $this->template        = $template;
-        $this->router          = $router;
-        $this->eventService    = $eventService;
-        $this->session         = $session;
+    /**
+     * EventController constructor.
+     *
+     * @param Template        $template
+     * @param Router          $router
+     * @param EventService    $eventService
+     * @param SessionManager  $session
+     * @param CategoryService $categoryService
+     */
+    public function __construct(
+        Template $template,
+        Router $router,
+        EventService $eventService,
+        SessionManager $session,
+        CategoryService $categoryService
+    ) {
+        $this->template = $template;
+        $this->router = $router;
+        $this->eventService = $eventService;
+        $this->session = $session;
         $this->categoryService = $categoryService;
     }
 
     public function index(): \Psr\Http\Message\ResponseInterface
     {
         $params = $this->request->getQueryParams();
-        $page   = isset($params['page']) ? $params['page'] : 1;
-        $limit  = isset($params['limit']) ? $params['limit'] : 15;
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 15;
         $events = $this->eventService->fetchAllArticles($page, $limit);
 
-        return new HtmlResponse($this->template->render('article::event/index', ['list' => $events, 'layout' => 'layout/admin']));
+        return new HtmlResponse($this->template->render(
+            'article::event/index',
+            ['list' => $events, 'layout' => 'layout/admin'])
+        );
     }
 
     public function edit($errors = []): \Psr\Http\Message\ResponseInterface
     {
-        $id         = $this->request->getAttribute('id');
-        $event      = $this->eventService->fetchSingleArticle($id);
-        $categories = $this->categoryService->getAll();
+        $id = $this->request->getAttribute('id');
+        $event = $this->eventService->fetchSingleArticle($id);
+        $categories = $this->categoryService->getAll(ArticleType::EVENT);
 
-        if($this->request->getParsedBody()) {
-            $event             = (object)($this->request->getParsedBody() + (array)$event);
+        if ($this->request->getParsedBody()) {
+            $event = (object) ($this->request->getParsedBody() + (array) $event);
             $event->article_id = $id;
         }
 
-        return new HtmlResponse($this->template->render('article::event/edit', [
-            'event'      => $event,
-            'categories' => $categories,
-            'errors'     => $errors,
-            'layout'     => 'layout/admin'
-        ]));
+        return new HtmlResponse(
+            $this->template->render(
+                'article::event/edit', [
+                    'event'      => $event,
+                    'categories' => $categories,
+                    'errors'     => $errors,
+                    'layout'     => 'layout/admin',
+                ]
+            )
+        );
     }
 
     public function save()
     {
         try {
-            $id   = $this->request->getAttribute('id');
+            $id = $this->request->getAttribute('id');
             $user = $this->session->getStorage()->user;
             $data = $this->request->getParsedBody();
             $data += (new Request())->getFiles()->toArray();
 
-            if($id) {
+            if ($id) {
                 $this->eventService->updateArticle($data, $id);
             } else {
                 $this->eventService->createArticle($user, $data);
             }
-        }
-        catch(FilterException $fe) {
+        } catch (FilterException $fe) {
             return $this->edit($fe->getArrayMessages());
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
@@ -88,8 +108,7 @@ class EventController extends AbstractController
     {
         try {
             $this->eventService->deleteArticle($this->request->getAttribute('id'));
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
@@ -97,5 +116,4 @@ class EventController extends AbstractController
             'Location', $this->router->generateUri('admin.events')
         );
     }
-
 }

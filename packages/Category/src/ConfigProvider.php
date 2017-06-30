@@ -9,7 +9,7 @@ class ConfigProvider
         return [
             'templates' => [
                 'paths' => [
-                    'category' => [__DIR__ . '/../templates/category'],
+                    'category' => [__DIR__.'/../templates/category'],
                 ],
             ],
 
@@ -17,7 +17,7 @@ class ConfigProvider
                 'factories' => [
                     // Service
                     Service\CategoryService::class    => Factory\Service\CategoryServiceFactory::class,
-                    Mapper\CategoryMapper::class      => \Core\Factory\MapperFactory::class,
+                    Mapper\CategoryMapper::class      => \Std\MapperFactory::class,
                     Filter\CategoryFilter::class      => \Zend\ServiceManager\Factory\InvokableFactory::class,
 
                     // Controller
@@ -36,7 +36,7 @@ class ConfigProvider
                     'name'            => 'admin.categories.action',
                     'path'            => '/admin/categories/:action/:id',
                     'middleware'      => Controller\IndexController::class,
-                    'allowed_methods' => ['GET', 'POST']
+                    'allowed_methods' => ['GET', 'POST'],
                 ],
             ],
 

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Menu\Factory\Service;
 
-use Interop\Container\ContainerInterface;
-use Menu\Service\MenuService;
-use Menu\Mapper\MenuMapper;
-use Menu\Filter\MenuFilter;
 use Category\Service\CategoryService;
-use Article\Service\PostService;
+use Interop\Container\ContainerInterface;
+use Menu\Filter\MenuFilter;
+use Menu\Mapper\MenuMapper;
+use Menu\Service\MenuService;
+use Page\Service\PageService;
 
 class MenuServiceFactory
 {
@@ -17,8 +19,7 @@ class MenuServiceFactory
             $container->get(MenuMapper::class),
             $container->get(MenuFilter::class),
             $container->get(CategoryService::class),
-            $container->get(PostService::class)
+            $container->get(PageService::class)
         );
     }
-
 }

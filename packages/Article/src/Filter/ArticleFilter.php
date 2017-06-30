@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Article\Filter;
 
 use Zend\InputFilter\InputFilter;
@@ -12,47 +14,62 @@ class ArticleFilter implements InputFilterAwareInterface
 
     public function getInputFilter()
     {
-        if(!$this->inputFilter) {
+        if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add([
-                'name'       => 'slug',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim', 'options' => ['charlist' => '/']]],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'slug',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim', 'options' => ['charlist' => '/']]],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'published_at',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [['name' => 'NotEmpty'], ['name' => 'Date', 'options' => ['format' => 'Y-m-d H:i:s']]]
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'published_at',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'Date', 'options' => ['format' => 'Y-m-d H:i:s']],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'     => 'category_id',
-                'required' => true
-            ]);
+            $inputFilter->add(
+                [
+                    'name'     => 'category_id',
+                    'required' => true,
+                ]
+            );
 
-            $inputFilter->add([
-                'name'     => 'admin_user_id',
-                'required' => true
-            ]);
+            $inputFilter->add(
+                [
+                    'name'     => 'admin_user_id',
+                    'required' => true,
+                ]
+            );
 
-            $inputFilter->add([
-                'name'     => 'status',
-                'required' => false,
-                'filters'  => [['name' => 'Boolean']],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'     => 'status',
+                    'required' => false,
+                    'filters'  => [['name' => 'Boolean']],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'     => 'is_wysiwyg_editor',
-                'required' => false,
-                'filters'  => [['name' => 'Boolean']],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'     => 'is_wysiwyg_editor',
+                    'required' => false,
+                    'filters'  => [['name' => 'Boolean']],
+                ]
+            );
 
             $this->inputFilter = $inputFilter;
         }
@@ -62,6 +79,6 @@ class ArticleFilter implements InputFilterAwareInterface
 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
-        throw new \Exception("Not used");
+        throw new \Exception('Not used');
     }
 }

@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Category\Controller;
 
 use Category\Service\CategoryService;
-use Core\Exception\FilterException;
-use Core\Controller\AbstractController;
-use Zend\Expressive\Template\TemplateRendererInterface as Template;
-use Zend\Expressive\Router\RouterInterface as Router;
+use Std\AbstractController;
+use Std\FilterException;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface as Router;
+use Zend\Expressive\Template\TemplateRendererInterface as Template;
 use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class IndexController.
- *
- * @package Category\Controller
  */
 class IndexController extends AbstractController
 {
@@ -31,29 +29,37 @@ class IndexController extends AbstractController
     /**
      * IndexController constructor.
      *
-     * @param Template $template template engine
+     * @param Template        $template        template engine
+     * @param Router          $router
+     * @param CategoryService $categoryService
      */
-    public function __construct(Template $template, Router $router, CategoryService $categoryService)
-    {
-        $this->template        = $template;
-        $this->router          = $router;
+    public function __construct(
+        Template $template,
+        Router $router,
+        CategoryService $categoryService
+    ) {
+        $this->template = $template;
+        $this->router = $router;
         $this->categoryService = $categoryService;
     }
 
     /**
-     * Category list
+     * Category list.
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index() : \Psr\Http\Message\ResponseInterface
+    public function index(): \Psr\Http\Message\ResponseInterface
     {
         $params = $this->request->getQueryParams();
-        $page   = isset($params['page']) ? $params['page'] : 1;
-        $limit  = isset($params['limit']) ? $params['limit'] : 15;
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 15;
 
         $categories = $this->categoryService->getPagination($page, $limit);
 
-        return new HtmlResponse($this->template->render('category::index/index', ['list' => $categories, 'layout' => 'layout/admin']));
+        return new HtmlResponse($this->template->render('category::index/index', [
+                'list'   => $categories,
+                'layout' => 'layout/admin',
+        ]));
     }
 
     /**
@@ -63,55 +69,60 @@ class IndexController extends AbstractController
      */
     public function edit($errors = []): \Psr\Http\Message\ResponseInterface
     {
-        $id       = $this->request->getAttribute('id');
+        $id = $this->request->getAttribute('id');
         $category = $this->categoryService->getCategory($id);
 
-        if($this->request->getParsedBody()){
-            $category              = (object)($this->request->getParsedBody() + (array)$category);
+        if ($this->request->getParsedBody()) {
+            $category = (object) ($this->request->getParsedBody() + (array) $category);
             $category->category_id = $id;
         }
 
-        return new HtmlResponse($this->template->render('category::index/edit', [
-            'category' => $category,
-            'errors'   => $errors,
-            'layout'   => 'layout/admin'
-        ]));
+        return new HtmlResponse(
+            $this->template->render('category::index/edit', [
+                    'category' => $category,
+                    'errors'   => $errors,
+                    'layout'   => 'layout/admin',
+                ]
+            )
+        );
     }
 
     public function save()
     {
-        try{
-            $id   = $this->request->getAttribute('id');
+        try {
+            $id = $this->request->getAttribute('id');
             $data = $this->request->getParsedBody();
             $data += (new Request())->getFiles()->toArray();
 
-            if($id){
+            if ($id) {
                 $this->categoryService->updateCategory($data, $id);
-            }
-            else{
+            } else {
                 $this->categoryService->createCategory($data);
             }
 
-            return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin.categories'));
-        }
-        catch(FilterException $fe){
+            return $this->response->withStatus(302)
+                ->withHeader('Location', $this->router->generateUri('admin.categories'));
+        } catch (FilterException $fe) {
             return $this->edit($fe->getArrayMessages());
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
 
     public function delete()
     {
-        try{
+        try {
             $id = $this->request->getAttribute('id');
             $this->categoryService->delete($id);
 
-            return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin.categories'));
-        }
-        catch(\Exception $e){
-            return $this->response->withStatus(302)->withHeader('Location', $this->router->generateUri('admin.categories'));
+            return $this->response->withStatus(302)->withHeader('Location',
+                $this->router->generateUri('admin.categories')
+            );
+        } catch (\Exception $e) {
+            return $this->response->withStatus(302)->withHeader(
+                'Location',
+                $this->router->generateUri('admin.categories')
+            );
         }
     }
 }

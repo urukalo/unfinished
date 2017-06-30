@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Test\Article\View\Helper;
 
 class EventHelperFactoryTest extends \PHPUnit_Framework_TestCase
@@ -16,6 +18,6 @@ class EventHelperFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will(static::returnValue($eventService));
         $factory = new \Article\Factory\View\Helper\EventHelperFactory();
-        static::assertInstanceOf(\Article\View\Helper\EventHelper::class, $factory($container, 'test') );
+        static::assertInstanceOf(\Article\View\Helper\EventHelper::class, $factory($container, 'test'));
     }
 }

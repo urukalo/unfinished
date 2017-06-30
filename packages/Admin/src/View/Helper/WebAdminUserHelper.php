@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\View\Helper;
 
+use Admin\Service\AdminUserService;
 use Zend\View\Helper\AbstractHelper;
-use Core\Service\AdminUserService;
 
 class WebAdminUserHelper extends AbstractHelper
 {
@@ -23,5 +25,4 @@ class WebAdminUserHelper extends AbstractHelper
     {
         return $this->adminUserService->getForWeb(5);
     }
-
 }

@@ -1,13 +1,18 @@
 language: php
+php:
+  - 7.0
+
+git:
+  depth: 5
+
+sudo: false
+
 matrix:
   fast_finish: true
-  include:
-    - php: 7
+
 install: composer install --no-interaction
 script:
   - composer test
-#  - composer test-coverage
-#  - php vendor/bin/coverage-checker.php clover.xml 100
   - composer cs-check
 after_script:
   - composer upload-coverage

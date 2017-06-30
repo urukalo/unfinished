@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Menu\Mapper;
 
 use Zend\Db\Adapter\Adapter;
@@ -18,20 +20,24 @@ class MenuMapper extends AbstractTableGateway implements AdapterAwareInterface
     public function selectAll($isActive = null, $filter = [])
     {
         $select = $this->getSql()->select()
-            ->join('category', 'menu.category_uuid = category.category_uuid', ['category_name' => 'name', 'category_slug' => 'slug'], 'left')
-            ->join('articles', 'articles.article_uuid = menu.article_uuid', ['article_id', 'article_slug' => 'slug'], 'left')
+            ->join(
+                'category',
+                'menu.category_uuid = category.category_uuid',
+                ['category_name' => 'name', 'category_slug' => 'slug'],
+                'left'
+            )->join('page', 'page.page_uuid = menu.page_uuid', ['page_id', 'page_slug' => 'slug'], 'left')
             ->order(['order_no' => 'asc']);
 
-        if($isActive !== null) {
-            $select->where(['is_active' => $isActive]);
+        if ($isActive !== null) {
+            $select->where(['menu.is_active' => $isActive]);
         }
 
-        if($filter) {
-            if(isset($filter['is_in_header'])) {
+        if ($filter) {
+            if (isset($filter['is_in_header'])) {
                 $select->where(['is_in_header' => $filter['is_in_header']]);
-            } elseif(isset($filter['is_in_footer'])) {
+            } elseif (isset($filter['is_in_footer'])) {
                 $select->where(['is_in_footer' => $filter['is_in_footer']]);
-            } elseif(isset($filter['is_in_side'])) {
+            } elseif (isset($filter['is_in_side'])) {
                 $select->where(['is_in_side' => $filter['is_in_side']]);
             }
         }
@@ -56,7 +62,7 @@ class MenuMapper extends AbstractTableGateway implements AdapterAwareInterface
     public function get($id)
     {
         $select = $this->getSql()->select()
-            ->join('articles', 'articles.article_uuid = menu.article_uuid', ['article_id'], 'left')
+            ->join('page', 'page.page_uuid = menu.page_uuid', ['page_id'], 'left')
             ->join('category', 'category.category_uuid = menu.category_uuid', ['category_id'], 'left')
             ->where(['menu_id' => $id]);
 

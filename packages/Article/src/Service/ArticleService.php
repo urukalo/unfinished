@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Article\Service;
 
-use Zend\Paginator\Paginator;
-use Zend\Paginator\Adapter\DbSelect;
-use Article\Mapper\ArticleMapper;
 use Article\Filter\ArticleFilter;
+use Article\Mapper\ArticleMapper;
+use Zend\Paginator\Adapter\DbSelect;
+use Zend\Paginator\Paginator;
 
 abstract class ArticleService implements ArticleServiceInterface
 {
@@ -21,7 +23,7 @@ abstract class ArticleService implements ArticleServiceInterface
     public function getPagination($select, $page, $limit)
     {
         $paginatorAdapter = new DbSelect($select, $this->articleMapper->getAdapter());
-        $paginator        = new Paginator($paginatorAdapter);
+        $paginator = new Paginator($paginatorAdapter);
 
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage($limit);
@@ -32,7 +34,7 @@ abstract class ArticleService implements ArticleServiceInterface
     public function getCategoryIds($articleId)
     {
         $categories = [];
-        foreach($this->articleMapper->getCategories($articleId) as $category) {
+        foreach ($this->articleMapper->getCategories($articleId) as $category) {
             $categories[] = $category->category_id;
         }
 

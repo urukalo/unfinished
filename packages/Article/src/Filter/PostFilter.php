@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Article\Filter;
 
 use Zend\InputFilter\InputFilter;
@@ -12,44 +14,52 @@ class PostFilter implements InputFilterAwareInterface
 
     public function getInputFilter()
     {
-        if(!$this->inputFilter) {
+        if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add([
-                'name'       => 'title',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'title',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'body',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100000]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'body',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 100000]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'       => 'lead',
-                'required'   => true,
-                'filters'    => [['name' => 'StringTrim']],
-                'validators' => [
-                    ['name' => 'NotEmpty'],
-                    ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 50000]],
-                ],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'       => 'lead',
+                    'required'   => true,
+                    'filters'    => [['name' => 'StringTrim']],
+                    'validators' => [
+                        ['name' => 'NotEmpty'],
+                        ['name' => 'StringLength', 'options' => ['min' => 2, 'max' => 50000]],
+                    ],
+                ]
+            );
 
-            $inputFilter->add([
-                'name'     => 'has_layout',
-                'required' => false,
-                'filters'  => [['name' => 'Boolean']],
-            ]);
+            $inputFilter->add(
+                [
+                    'name'     => 'has_layout',
+                    'required' => false,
+                    'filters'  => [['name' => 'Boolean']],
+                ]
+            );
 
             $this->inputFilter = $inputFilter;
         }
@@ -59,6 +69,6 @@ class PostFilter implements InputFilterAwareInterface
 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
-        throw new \Exception("Not used");
+        throw new \Exception('Not used');
     }
 }

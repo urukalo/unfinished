@@ -1,7 +1,7 @@
-# Unfinished PHP CMS
+# Project Unfinished
 
 [![Build Status](https://travis-ci.org/phpsrbija/unfinished.svg?branch=master)](https://travis-ci.org/phpsrbija/unfinished)
-[![Coverage Status](https://coveralls.io/repos/github/phpsrbija/unfinished/badge.svg?branch=master)](https://coveralls.io/github/phpsrbija/unfinished?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/phpsrbija/unfinished/badge.svg)](https://coveralls.io/github/phpsrbija/unfinished)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/phpsrbija/unfinished/badges/quality-score.png?s=4023c984fc1163a44f4220cd7d57406643ced9f2)](https://scrutinizer-ci.com/g/phpsrbija/unfinished/)
 
 ## Instalation
@@ -37,26 +37,32 @@ Such a way will lead us to easier:
 
 ## Road Map
 
-### Reafctoring 
+### New packages
+- [x] News Letter
+- [ ] Contact Us
+- [ ] Media (for images, admin)
+- [ ] User (for web users)
 
-- [x] Introduce a new package "Page" for a single pages like "about us"
-- [ ] Add type to the category (post, video, event, discussion...) also add "is_visible" and SEO tags
-- [ ] Pull apart current **Article** package into separated packages per article type, allowing easy to add new type or remove. New packages would be: 
+### Reafctoring 
+     
+- [ ] Refactor and extend Admin packages. Wee need to have:
+     - [ ] Admin package (very tiny, hold only layout.phtm with navigation config)
+     - [ ] AdminUser package
+     - [ ] AdminPermissions package
+
+- [ ] Pull apart current **Article** package into separated packages per article type, allowing easy to add/remove type
      - [ ] PostArticle, 
      - [ ] VideoArticle, 
      - [ ] EventArticle, 
      - [ ] DiscussionArticle
-     
-- [ ] Get rid of the Core package as completely unnecessary package
-- [ ] Refactor Admin package to hold only layout.phtm with admin style (css/html)
-- [ ] Create AdminUser package
-- [ ] Create AdminAcl package
+
+- [ ] Introduce Entities and Hydration (as in Page package)
+
+### Wish list
+- [ ] Switch current Zend-Router router with FastRoute 
+- [ ] Move all packages in separate repository (main repo need to have install process)
+- [ ] Scale images during upload process; change upload lib.
 - [ ] Better naming of variables/functions & write the documentation
 - [ ] Devops things as well as rise up code coverage with Unit testing
-- [ ] Scale images during upload process
+- [ ] Better handling exceptions per package
 
-### New packages
-- [ ] Contact Us
-- [x] News Letter
-- [ ] Media (for images)
-- [ ] User (for web users)

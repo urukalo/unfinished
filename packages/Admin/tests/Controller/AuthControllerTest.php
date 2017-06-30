@@ -1,32 +1,34 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Test\Admin\Controller;
 
 class AuthControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testIfUserAlreadyLoggedInRedirectShouldBePerformed()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withAttribute('action', 'login');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->setMethods(['generateUri'])
             ->getMockForAbstractClass();
         $router->expects(static::at(0))
             ->method('generateUri')
             ->will(static::returnValue('http://unfinished.dev/admin'));
-        $sessionManager = $this->getMockBuilder('Zend\Session\SessionManager')
+        $sessionManager = $this->getMockBuilder(\Zend\Session\SessionManager::class)
             ->setMethods(['getStorage', 'writeClose'])
             ->getMock();
         $sessionManager->expects(static::at(0))
             ->method('getStorage')
             ->will(static::returnValue(
-                new class {
+                new class() {
                     public $user = true;
                 }
             ));
@@ -39,10 +41,10 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testIfUserNotLoggedInLoginActionShouldTakeHimToLoginHtmlPage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->setMethods(['render'])
             ->getMockForAbstractClass();
         $template->expects(static::at(0))
@@ -51,15 +53,15 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withAttribute('action', 'login');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->getMockForAbstractClass();
-        $sessionManager = $this->getMockBuilder('Zend\Session\SessionManager')
+        $sessionManager = $this->getMockBuilder(\Zend\Session\SessionManager::class)
             ->setMethods(['getStorage', 'writeClose'])
             ->getMock();
         $sessionManager->expects(static::at(0))
             ->method('getStorage')
             ->will(static::returnValue(
-                new class {
+                new class() {
                     public $user = false;
                 }
             ));
@@ -72,15 +74,15 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUserLogoutShouldClearSessionStorage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withAttribute('action', 'logout');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->setMethods(['generateUri'])
             ->getMockForAbstractClass();
         $router->expects(static::at(0))
@@ -101,27 +103,27 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUserLoginHandleWithCorrectCredentialsShouldSetUserInSessionStorage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->setMethods(['loginUser'])
             ->getMockForAbstractClass();
         $adminUserService->expects(static::once())
             ->method('loginUser')
             ->will(static::returnValue(
-                new class {
+                new class() {
                     public $isLoggedIn = true;
                 }
             ));
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withParsedBody([
-            'email' => 'admin@example.org',
+            'email'    => 'admin@example.org',
             'password' => 'secret',
         ]);
         $request = $request->withAttribute('action', 'loginHandle');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->setMethods(['generateUri'])
             ->getMockForAbstractClass();
         $router->expects(static::at(0))
@@ -140,20 +142,20 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUserLoginHandleWithWrongCredentialsShouldNotSetUserInSessionStorage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->setMethods(['loginUser'])
             ->getMockForAbstractClass();
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withParsedBody([
-            'email' => 'admin@test',
+            'email'    => 'admin@test',
             'password' => 'secretpass',
         ]);
         $request = $request->withAttribute('action', 'loginHandle');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->setMethods(['generateUri'])
             ->getMockForAbstractClass();
         $router->expects(static::at(0))
@@ -173,15 +175,15 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUserLoginHandleWitAlreadyLoggedInUserShouldRedirectToAdminPage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withAttribute('action', 'loginHandle');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->setMethods(['generateUri'])
             ->getMockForAbstractClass();
         $router->expects(static::at(0))
@@ -201,30 +203,30 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUserLoginHandleShouldThrowExceptionAndDisplayMessage()
     {
-        $adminUserService = $this->getMockBuilder('Core\Service\AdminUserService')
+        $adminUserService = $this->getMockBuilder(\Admin\Service\AdminUserService::class)
             ->disableOriginalConstructor()
             ->setMethods(['loginUser'])
             ->getMockForAbstractClass();
         $adminUserService->expects(static::once())
             ->method('loginUser')
             ->willThrowException(new \Exception('test error'));
-        $template = $this->getMockBuilder('Zend\Expressive\Template\TemplateRendererInterface')
+        $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
             ->getMockForAbstractClass();
         $template->expects(static::once())
             ->method('render')
             ->will(static::returnCallback(
-                function($tpl, $error) {
+                function ($tpl, $error) {
                     return $error['error'];
                 }
             ));
         $request = new \Zend\Diactoros\ServerRequest();
         $request = $request->withParsedBody([
-            'email' => 'admin@test',
+            'email'    => 'admin@test',
             'password' => 'secretpass',
         ]);
         $request = $request->withAttribute('action', 'loginHandle');
         $response = new \Zend\Diactoros\Response\EmptyResponse();
-        $router = $this->getMockBuilder('Zend\Expressive\Router\RouterInterface')
+        $router = $this->getMockBuilder(\Zend\Expressive\Router\RouterInterface::class)
             ->getMockForAbstractClass();
         $sessionStorage = new \Zend\Session\Storage\ArrayStorage();
         $sessionManager = new \Zend\Session\SessionManager();

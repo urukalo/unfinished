@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Test\Article\Controller;
 
 class EventControllerTest extends \PHPUnit_Framework_TestCase
@@ -115,9 +117,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -144,7 +148,9 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+        /**
+         * @var \Zend\Diactoros\Response
+         */
         $returnedResponse = $eventController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -153,9 +159,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -183,7 +191,9 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+        /**
+         * @var \Zend\Diactoros\Response
+         */
         $returnedResponse = $eventController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -192,9 +202,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -207,7 +219,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $eventService->expects(static::once())
             ->method('updateArticle')
-            ->willThrowException(new \Core\Exception\FilterException(['test error']));
+            ->willThrowException(new \Std\FilterException(['test error']));
         $categoryService = $this->getMockBuilder(\Category\Service\CategoryService::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -225,7 +237,9 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+        /**
+         * @var \Zend\Diactoros\Response
+         */
         $returnedResponse = $eventController($request, $response);
         static::assertSame(200, $returnedResponse->getStatusCode());
         static::assertInstanceOf(\Zend\Diactoros\Response\HtmlResponse::class, $returnedResponse);
@@ -239,9 +253,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -276,9 +292,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)
@@ -305,7 +323,9 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             $sessionManager,
             $categoryService
         );
-        /** @var \Zend\Diactoros\Response $returnedResponse */
+        /**
+         * @var \Zend\Diactoros\Response
+         */
         $returnedResponse = $eventController($request, $response);
         static::assertSame(302, $returnedResponse->getStatusCode());
     }
@@ -318,9 +338,11 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \stdClass();
         $user->admin_user_id = 1;
-        $sessionStorage = new \Zend\Session\Storage\ArrayStorage([
+        $sessionStorage = new \Zend\Session\Storage\ArrayStorage(
+            [
             'user' => true,
-        ]);
+            ]
+        );
         $sessionManager = new \Zend\Session\SessionManager();
         $sessionManager->setStorage($sessionStorage);
         $template = $this->getMockBuilder(\Zend\Expressive\Template\TemplateRendererInterface::class)

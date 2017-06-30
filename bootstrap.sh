@@ -16,7 +16,6 @@ echo "
 sudo add-apt-repository ppa:ondrej/php      >> /dev/null 2>&1
 sudo apt-get update                         >> /dev/null 2>&1
 
-
 echo "
 ────────────────────────────────────────────────────────────────────────────────────────────────────────
    Installing MySql 5.6 - DB name: unfinished | user:root | password:12345
@@ -65,9 +64,9 @@ sudo mv composer.phar /usr/local/bin/composer
 cd /var/www/unfinished/
 
 if [ -d "vendor" ]; then
- composer update --no-dev       >> /dev/null 2>&1
+ composer update      >> /dev/null 2>&1
 else
- composer install --no-dev      >> /dev/null 2>&1
+ composer install     >> /dev/null 2>&1
 fi
 
 echo "

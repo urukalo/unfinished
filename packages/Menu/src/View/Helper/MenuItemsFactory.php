@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Menu\View\Helper;
 
-use Menu\Service\MenuService;
 use Interop\Container\ContainerInterface;
+use Menu\Service\MenuService;
 
 class MenuItemsFactory
 {
@@ -13,5 +15,4 @@ class MenuItemsFactory
             $container->get(MenuService::class)
         );
     }
-
 }
