@@ -40,6 +40,7 @@ Such a way will lead us to easier:
 ### New packages
 - [x] News Letter
 - [ ] Contact Us
+- [ ] Settings (for global web site configuration like SEO tags)
 - [ ] Media (for images, admin)
 - [ ] User (for web users)
 
@@ -59,10 +60,13 @@ Such a way will lead us to easier:
 - [ ] Introduce Entities and Hydration (as in Page package)
 
 ### Wish list
-- [ ] Switch current Zend-Router router with FastRoute 
+- [x] Switch current Zend-Router router with FastRoute 
 - [ ] Move all packages in separate repository (main repo need to have install process)
 - [ ] Scale images during upload process; change upload lib.
 - [ ] Better naming of variables/functions & write the documentation
-- [ ] Devops things as well as rise up code coverage with Unit testing
+- [ ] DevOps things as well as rise up code coverage with Unit testing
 - [ ] Better handling exceptions per package
 
+## Database info
+
+You have a mysql database setup, the db name is `unfinished`, the user is `root` the password is `12345`.
